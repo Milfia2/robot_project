@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<sdf version="1.8">
+  <world name="pick_place_world">
+
+    <!-- ============================================================
+         PHYSICS
+    ============================================================ -->
+    <physics name="1ms" type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <!-- ============================================================
+         PLUGINS
+    ============================================================ -->
+    <plugin filename="gz-sim-physics-system"
+            name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system"
+            name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system"
+            name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-sensors-system"
+            name="gz::sim::systems::Sensors">
+      <render_engine>ogre2</render_engine>
+    </plugin>
+    <plugin filename="gz-sim-contact-system"
+            name="gz::sim::systems::Contact"/>
+
+    <!-- ============================================================
+         LIGHTING
+    ============================================================ -->
+    <light type="directional" name="sun">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- ============================================================
+         GROUND PLANE
+    ============================================================ -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>100 100</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>10 10</size></plane></geometry>
+          <material>
+            <ambient>0.3 0.3 0.3 1</ambient>
+            <diffuse>0.4 0.4 0.4 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================
+         WORKTABLE (robot base platform)
+    ============================================================ -->
+    <model name="robot_table">
+      <static>true</static>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="table_link">
+        <visual name="table_visual">
+          <pose>0 0 0.375 0 0 0</pose>
+          <geometry><box><size>0.8 0.8 0.75</size></box></geometry>
+          <material>
+            <ambient>0.5 0.4 0.3 1</ambient>
+            <diffuse>0.6 0.5 0.4 1</diffuse>
+          </material>
+        </visual>
+        <collision name="table_collision">
+          <pose>0 0 0.375 0 0 0</pose>
+          <geometry><box><size>0.8 0.8 0.75</size></box></geometry>
+        </collision>
+      </link>
+    </model>
+
+    <!-- ============================================================
+         PICK TABLE (where the object sits)
+    ============================================================ -->
+    <model name="pick_table">
+      <static>true</static>
+      <pose>0.45 0 0 0 0 0</pose>
+      <link name="table_link">
+        <visual name="table_visual">
+          <pose>0 0 0.4 0 0 0</pose>
+          <geometry><box><size>0.5 0.5 0.8</size></box></geometry>
+          <material>
+            <ambient>0.4 0.3 0.2 1</ambient>
+            <diffuse>0.55 0.4 0.25 1</diffuse>
+          </material>
+        </visual>
+        <collision name="table_collision">
+          <pose>0 0 0.4 0 0 0</pose>
+          <geometry><box><size>0.5 0.5 0.8</size></box></geometry>
+        </collision>
+        <!-- Table top surface marker -->
+        <visual name="tabletop_visual">
+          <pose>0 0 0.802 0 0 0</pose>
+          <geometry><box><size>0.5 0.5 0.004</size></box></geometry>
+          <material>
+            <ambient>0.6 0.5 0.3 1</ambient>
+            <diffuse>0.7 0.6 0.35 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================
+         PLACE ZONE TABLE
+    ============================================================ -->
+    <model name="place_table">
+      <static>true</static>
+      <pose>0 0.5 0 0 0 0</pose>
+      <link name="table_link">
+        <visual name="table_visual">
+          <pose>0 0 0.4 0 0 0</pose>
+          <geometry><box><size>0.4 0.4 0.8</size></box></geometry>
+          <material>
+            <ambient>0.2 0.3 0.5 1</ambient>
+            <diffuse>0.3 0.4 0.6 1</diffuse>
+          </material>
+        </visual>
+        <collision name="table_collision">
+          <pose>0 0 0.4 0 0 0</pose>
+          <geometry><box><size>0.4 0.4 0.8</size></box></geometry>
+        </collision>
+        <!-- Place zone marker (green circle indicator) -->
+        <visual name="place_marker_visual">
+          <pose>0 0 0.802 0 0 0</pose>
+          <geometry><cylinder><radius>0.08</radius><length>0.004</length></cylinder></geometry>
+          <material>
+            <ambient>0.1 0.8 0.1 0.8</ambient>
+            <diffuse>0.2 1.0 0.2 0.8</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================
+         PLACE ZONE VISUAL INDICATOR (floating arrow)
+    ============================================================ -->
+    <model name="place_indicator">
+      <static>true</static>
+      <pose>0 0.5 1.1 0 0 0</pose>
+      <link name="link">
+        <visual name="arrow_visual">
+          <geometry><cylinder><radius>0.01</radius><length>0.2</length></cylinder></geometry>
+          <material>
+            <ambient>0.1 0.9 0.1 0.7</ambient>
+            <diffuse>0.2 1.0 0.2 0.7</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================================
+         UR5 ROBOT
+    ============================================================ -->
+    <include>
+      <uri>model://ur5_robot</uri>
+      <pose>0 0 0.75 0 0 0</pose>
+    </include>
+
+    <!-- ============================================================
+         PICK OBJECT (Red box)
+    ============================================================ -->
+    <model name="pick_object">
+      <pose>0.45 0.0 0.835 0 0 0</pose>
+      <link name="box_link">
+        <inertial>
+          <mass>0.15</mass>
+          <inertia><ixx>0.0001</ixx><ixy>0</ixy><ixz>0</ixz>
+                   <iyy>0.0001</iyy><iyz>0</iyz><izz>0.0001</izz></inertia>
+        </inertial>
+        <visual name="box_visual">
+          <geometry><box><size>0.05 0.05 0.05</size></box></geometry>
+          <material>
+            <ambient>0.9 0.1 0.1 1</ambient>
+            <diffuse>1.0 0.15 0.15 1</diffuse>
+            <specular>0.5 0.1 0.1 1</specular>
+            <emissive>0.05 0.0 0.0 1</emissive>
+          </material>
+        </visual>
+        <collision name="box_collision">
+          <geometry><box><size>0.05 0.05 0.05</size></box></geometry>
+          <surface>
+            <friction>
+              <ode><mu>1.0</mu><mu2>1.0</mu2></ode>
+            </friction>
+            <contact>
+              <ode>
+                <kp>1e6</kp>
+                <kd>1</kd>
+              </ode>
+            </contact>
+          </surface>
+        </collision>
+      </link>
+    </model>
+
+  </world>
+</sdf>

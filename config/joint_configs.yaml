@@ -1,0 +1,153 @@
+# ============================================================
+# UR5 Joint Configurations for Pick-and-Place
+# Units: radians for revolute joints, meters for prismatic
+#
+# Joint order:
+#   shoulder_pan_joint    (rotation around Z, base pan)
+#   shoulder_lift_joint   (rotation around Y, shoulder)
+#   elbow_joint           (rotation around Y, elbow)
+#   wrist_1_joint         (rotation around Y, wrist bend)
+#   wrist_2_joint         (rotation around Z, wrist rotate)
+#   wrist_3_joint         (rotation around Y, tool spin)
+#   left_finger_joint     (prismatic, open=0.04 / close=0.0)
+#   right_finger_joint    (prismatic, open=0.04 / close=0.0)
+#
+# ============================================================
+
+poses:
+  # ─────────────────────────────────────────────────────────
+  # HOME: upright safe position
+  # ─────────────────────────────────────────────────────────
+  home:
+    description: "Safe upright home position"
+    joints:
+      shoulder_pan_joint:  0.0
+      shoulder_lift_joint: -1.5708   # -90 deg (pointing straight up)
+      elbow_joint:          0.0
+      wrist_1_joint:       -1.5708   # -90 deg
+      wrist_2_joint:        0.0
+      wrist_3_joint:        0.0
+      left_finger_joint:    0.04     # open
+      right_finger_joint:   0.04     # open
+
+  # ─────────────────────────────────────────────────────────
+  # ABOVE OBJECT: directly over pick position (x=0.45, y=0)
+  # End-effector hovers ~15cm above table surface
+  # ─────────────────────────────────────────────────────────
+  above_object:
+    description: "Above pick object, gripper open"
+    joints:
+      shoulder_pan_joint:   0.0
+      shoulder_lift_joint: -1.0472   # -60 deg
+      elbow_joint:          1.3962   # +80 deg
+      wrist_1_joint:       -1.9199   # -110 deg
+      wrist_2_joint:        0.0
+      wrist_3_joint:        0.0
+      left_finger_joint:    0.04     # open
+      right_finger_joint:   0.04     # open
+
+  # ─────────────────────────────────────────────────────────
+  # APPROACH OBJECT: lower to pick object level
+  # End-effector at object height
+  # ─────────────────────────────────────────────────────────
+  approach_object:
+    description: "Lowered to pick object level"
+    joints:
+      shoulder_pan_joint:   0.0
+      shoulder_lift_joint: -0.7854   # -45 deg
+      elbow_joint:          1.6580   # +95 deg
+      wrist_1_joint:       -2.3562   # -135 deg
+      wrist_2_joint:        0.0
+      wrist_3_joint:        0.0
+      left_finger_joint:    0.04     # open (about to grasp)
+      right_finger_joint:   0.04     # open
+
+  # ─────────────────────────────────────────────────────────
+  # GRASP: close gripper (same arm position, fingers close)
+  # ─────────────────────────────────────────────────────────
+  grasp:
+    description: "Gripper closed on object"
+    joints:
+      shoulder_pan_joint:   0.0
+      shoulder_lift_joint: -0.7854
+      elbow_joint:          1.6580
+      wrist_1_joint:       -2.3562
+      wrist_2_joint:        0.0
+      wrist_3_joint:        0.0
+      left_finger_joint:    0.005    # closed (contact grip)
+      right_finger_joint:   0.005    # closed
+
+  # ─────────────────────────────────────────────────────────
+  # LIFT: raise object after grasping
+  # ─────────────────────────────────────────────────────────
+  lift:
+    description: "Lifted object clear of table"
+    joints:
+      shoulder_pan_joint:   0.0
+      shoulder_lift_joint: -1.0472   # back to above-object height
+      elbow_joint:          1.3962
+      wrist_1_joint:       -1.9199
+      wrist_2_joint:        0.0
+      wrist_3_joint:        0.0
+      left_finger_joint:    0.005    # keep closed
+      right_finger_joint:   0.005
+
+  # ─────────────────────────────────────────────────────────
+  # ABOVE PLACE: over the place zone (x=0, y=0.5)
+  # ─────────────────────────────────────────────────────────
+  above_place:
+    description: "Above place zone, object still grasped"
+    joints:
+      shoulder_pan_joint:   1.5708   # +90 deg pan to Y axis
+      shoulder_lift_joint: -1.0472
+      elbow_joint:          1.3962
+      wrist_1_joint:       -1.9199
+      wrist_2_joint:        0.0
+      wrist_3_joint:        0.0
+      left_finger_joint:    0.005
+      right_finger_joint:   0.005
+
+  # ─────────────────────────────────────────────────────────
+  # LOWER TO PLACE: descend into place zone
+  # ─────────────────────────────────────────────────────────
+  lower_to_place:
+    description: "Lowered to place surface"
+    joints:
+      shoulder_pan_joint:   1.5708
+      shoulder_lift_joint: -0.7854
+      elbow_joint:          1.6580
+      wrist_1_joint:       -2.3562
+      wrist_2_joint:        0.0
+      wrist_3_joint:        0.0
+      left_finger_joint:    0.005
+      right_finger_joint:   0.005
+
+  # ─────────────────────────────────────────────────────────
+  # RELEASE: open gripper at place zone
+  # ─────────────────────────────────────────────────────────
+  release:
+    description: "Gripper opened, object released"
+    joints:
+      shoulder_pan_joint:   1.5708
+      shoulder_lift_joint: -0.7854
+      elbow_joint:          1.6580
+      wrist_1_joint:       -2.3562
+      wrist_2_joint:        0.0
+      wrist_3_joint:        0.0
+      left_finger_joint:    0.04     # open
+      right_finger_joint:   0.04     # open
+
+  # ─────────────────────────────────────────────────────────
+  # RETREAT: raise back up after placing
+  # ─────────────────────────────────────────────────────────
+  retreat:
+    description: "Raise up after placing"
+    joints:
+      shoulder_pan_joint:   1.5708
+      shoulder_lift_joint: -1.0472
+      elbow_joint:          1.3962
+      wrist_1_joint:       -1.9199
+      wrist_2_joint:        0.0
+      wrist_3_joint:        0.0
+      left_finger_joint:    0.04
+      right_finger_joint:   0.04
